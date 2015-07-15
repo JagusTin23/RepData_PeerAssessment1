@@ -16,28 +16,15 @@ data$date <- ymd(data$date)
 
 ## What is mean total number of steps taken per day?
 ```{r mean_median, echo =TRUE}
-library(dplyr)
-by_date <- 
-    data %>%
-    select(date, steps) %>%
-    group_by(date) %>%
-    summarize(stepsDay = sum(steps, na.rm = TRUE))
-Avg_steps <- round(mean(by_date$stepsDay))
-Median_steps <- median(by_date$stepsDay)
-```
-
-```{r histogram, echo=TRUE}
-hist(by_date$stepsDay, main = "Steps Taken Per Day", col = "green", xlab = "steps/day")
-```
-
-Above is a histogram of the total number of steps taken per day. Missing values were removed calling the argument na.rm = TRUE on sum().  
-
-The mean total number of steps taken by the subject is **`r Avg_steps`**.  
-
-The median total number of steps take by the subject is **`r Median_steps`**.  
+steps_day <- with(data, aggregate(steps, by = list(date), FUN=sum))    
+hist(steps_day[,2], main = "Steps Taken Per Day", col = "turquoise", xlab = "steps/day")
+mean(steps_day[,2], na.rm = TRUE)  
+median(steps_day[,2], na.rm = TRUE) 
+```   
 
 ## What is the average daily activity pattern?
 ```{r}
+library(dplyr)
 by_interval <- 
     data %>%
     select(interval, steps) %>%
@@ -91,40 +78,22 @@ by_date2 <-
     summarize(stepsDay2 = sum(steps))
 Avg_steps2 <- round(mean(by_date2$stepsDay2))
 Median_steps2 <- median(by_date2$stepsDay2)
-hist(by_date2$stepsDay2, main = "Steps Taken Per Day", col = "red", xlab = "steps/day")
+hist(by_date2$stepsDay2, main = "Steps Taken Per Day", col = "steelblue1", xlab = "steps/day")
 ```  
 
 As can be seen, the data has been normalized by imputting missing values with the mean steps taken per 5 minute interval. The new **mean** and **median** are equal with a value of **10766.19**.  
 
-The data was being affected by removing the missing values. When summarizing the data using dplyr package, the sum of the steps taken was equal to zero for days with missing values for the steps variable. There were 8 days total with missing values which affected the original mean and median calculations. It is unlikely that the subject took no steps in those days given the activity shown in the other days. 
+The data was not affected drastically by imputing the missing values with the mean interval values. The median shifted to the mean and the total number of steps taken daily slightly increased as can be seen from the histogram.  
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 ```{r echo=TRUE}
-weekdaysV <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
-data2$wkday <- factor((weekdays(data2$date) %in% weekdaysV), levels=c(FALSE, TRUE), labels=c('weekend', 'weekday'))
+weekend <- c("Saturday", "Sunday")
+data2$wkday <- factor((weekdays(data2$date) %in% weekend), levels=c(FALSE, TRUE), labels=c('weekday', 'weekend'))
 
-weekdays <- data2[which(data2$wkday == "weekday"),]
-weekends <- data2[which(data2$wkday == "weekend"),]
-
-by_wkday <- 
-    weekdays %>%
-    select(interval, steps) %>%
-    group_by(interval) %>%
-    summarize(avgSteps = mean(steps))
-
-by_wkend <- 
-    weekends %>%
-    select(interval, steps) %>%
-    group_by(interval) %>%
-    summarize(AvgSteps = mean(steps))
-
-DF_wkend <- as.data.frame(by_wkend)
-DF_wkday <- as.data.frame(by_wkday)
-
-par(mfrow = c(2,1), mar = c(4,4,2,2))
-plot(DF_wkday[,1], DF_wkday[,2], type = "l", xlab = "5 Minute Interval", ylab = "Steps/Day", main = "Weekdays")
-plot(DF_wkend[,1], DF_wkend[,2], type = "l", xlab = "5 Minute Interval", ylab = "Steps/Day", main = "Weekends")
+wkdata <- aggregate(steps~interval+wkday, data2, FUN=mean)
+library(lattice)
+xyplot(steps~interval|wkday, wkdata, layout=c(1,2), type = "l")
 dev.off()
 ```
 
