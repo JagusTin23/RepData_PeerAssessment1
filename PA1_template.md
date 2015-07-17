@@ -1,5 +1,6 @@
 # Reproducible Research: Peer Assessment 1
 
+
 ## Loading and preprocessing the data
 
 ```r
@@ -80,7 +81,7 @@ print(as.data.frame(verif))
 ```
 There are 8 days each containing a total of 288 rows of missing values. This number corresponds to the number of intervals recorded each day. This evaluation was performed to ensure there were no days with both recorded and missing values.    
 
-This information was used to devise a strategy for inputing missing values. The strategy consists of inputing missing values with the mean steps taken per interval calculated in the previous step. 
+This information was used to devise a strategy for imputing missing values. The strategy consists of imputing missing values with the mean steps taken per interval calculated in the previous step. 
 
 
 ```r

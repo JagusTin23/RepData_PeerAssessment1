@@ -109,7 +109,7 @@ print(as.data.frame(verif))</code></pre>
 ## 7 2012-11-14   288
 ## 8 2012-11-30   288</code></pre>
 <p>There are 8 days each containing a total of 288 rows of missing values. This number corresponds to the number of intervals recorded each day. This evaluation was performed to ensure there were no days with both recorded and missing values.</p>
-<p>This information was used to devise a strategy for inputing missing values. The strategy consists of inputing missing values with the mean steps taken per interval calculated in the previous step.</p>
+<p>This information was used to devise a strategy for imputing missing values. The strategy consists of imputing missing values with the mean steps taken per interval calculated in the previous step.</p>
 <pre class="r"><code>data2 &lt;- read.csv(file, header = TRUE, stringsAsFactor = FALSE)
 data2[which(data2$date == &quot;2012-10-01&quot;),1] &lt;- steps_int[,2]
 data2[which(data2$date == &quot;2012-10-08&quot;),1] &lt;- steps_int[,2]
