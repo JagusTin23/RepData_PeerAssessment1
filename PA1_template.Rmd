@@ -16,20 +16,20 @@ data$date <- ymd(data$date)
 
 ## What is mean total number of steps taken per day?
 ```{r mean_median, echo=TRUE}
-steps_day <- with(data, aggregate(steps, by = list(date), FUN=sum))    
-hist(steps_day[,2], main = "Steps Taken Per Day", col = "turquoise", xlab = "steps/day")
-mean(steps_day[,2], na.rm = TRUE)  
-median(steps_day[,2], na.rm = TRUE) 
+steps_day <- aggregate(steps~date, data, sum)    
+hist(steps_day$steps, main = "Steps Taken Per Day", col = "turquoise", xlab = "steps/day")
+mean(steps_day$steps)  
+median(steps_day$steps) 
 ```   
 
 ## What is the average daily activity pattern?
 ```{r echo=TRUE}
-steps_int <- with(data, aggregate(steps, by = list(interval), FUN=mean, na.rm=TRUE))
-maxActiveInt <- as.numeric(steps_int[which.max(steps_int[,2]),1])
-maxSteps <-  round(max(steps_int[,2]))
+steps_int <- aggregate(steps~interval, data, mean, na.rm=TRUE)
+maxActiveInt <- steps_int[which.max(steps_int$steps),1]
+maxSteps <-  round(max(steps_int$steps))
 ```
 ```{r dailyplot, echo=TRUE}
-plot(steps_int[,1], steps_int[,2], type = "l", xlab = "5-minute interval", ylab = "steps")
+plot(steps_int$interval, steps_int$steps, type = "l", xlab = "5-minute interval", ylab = "steps")
 ```  
 
 The 5 minute interval with the maximun number of steps is interval **`r maxActiveInt`** with an average of **`r maxSteps`** of steps taken.  
@@ -54,24 +54,24 @@ This information was used to devise a strategy for imputing missing values. The 
 
 ```{r echo=TRUE}
 data2 <- read.csv(file, header = TRUE, stringsAsFactor = FALSE)
-data2[which(data2$date == "2012-10-01"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-10-08"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-01"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-04"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-09"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-10"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-14"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-30"),1] <- steps_int[,2]
+data2[which(data2$date == "2012-10-01"),1] <- steps_int$steps
+data2[which(data2$date == "2012-10-08"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-01"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-04"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-09"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-10"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-14"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-30"),1] <- steps_int$steps
 data2$date <- ymd(data2$date)
-new_data <- with(data2, aggregate(steps, by=list(date), FUN=sum))
-hist(new_data[,2], main = "Steps Taken Per Day", col = "orchid", xlab = "steps/day")
+new_data <- aggregate(steps~date, data2, sum)
+hist(new_data$steps, main = "Steps Taken Per Day", col = "orchid", xlab = "steps/day")
 ```
 
 ## New mean and median calculations.  
 
 ```{r echo=TRUE}
-mean(new_data[,2])
-median(new_data[,2])
+mean(new_data$steps)
+median(new_data$steps)
 ```  
 
 The data was normalized by imputting missing values with the mean steps taken per 5 minute interval. The new **mean** and **median** are equal with a value of **10766.19**. The data was not affected drastically by imputing the missing values with the mean interval values. The median shifted to the mean and the total number of steps taken daily slightly increased as can be seen from the histogram.  

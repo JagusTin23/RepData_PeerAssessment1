@@ -13,14 +13,14 @@ data$date <- ymd(data$date)
 ## What is mean total number of steps taken per day?
 
 ```r
-steps_day <- with(data, aggregate(steps, by = list(date), FUN=sum))    
-hist(steps_day[,2], main = "Steps Taken Per Day", col = "turquoise", xlab = "steps/day")
+steps_day <- aggregate(steps~date, data, sum)    
+hist(steps_day$steps, main = "Steps Taken Per Day", col = "turquoise", xlab = "steps/day")
 ```
 
 ![](PA1_template_files/figure-html/mean_median-1.png) 
 
 ```r
-mean(steps_day[,2], na.rm = TRUE)  
+mean(steps_day$steps)  
 ```
 
 ```
@@ -28,7 +28,7 @@ mean(steps_day[,2], na.rm = TRUE)
 ```
 
 ```r
-median(steps_day[,2], na.rm = TRUE) 
+median(steps_day$steps) 
 ```
 
 ```
@@ -38,13 +38,13 @@ median(steps_day[,2], na.rm = TRUE)
 ## What is the average daily activity pattern?
 
 ```r
-steps_int <- with(data, aggregate(steps, by = list(interval), FUN=mean, na.rm=TRUE))
-maxActiveInt <- as.numeric(steps_int[which.max(steps_int[,2]),1])
-maxSteps <-  round(max(steps_int[,2]))
+steps_int <- aggregate(steps~interval, data, mean, na.rm=TRUE)
+maxActiveInt <- steps_int[which.max(steps_int$steps),1]
+maxSteps <-  round(max(steps_int$steps))
 ```
 
 ```r
-plot(steps_int[,1], steps_int[,2], type = "l", xlab = "5-minute interval", ylab = "steps")
+plot(steps_int$interval, steps_int$steps, type = "l", xlab = "5-minute interval", ylab = "steps")
 ```
 
 ![](PA1_template_files/figure-html/dailyplot-1.png) 
@@ -86,17 +86,17 @@ This information was used to devise a strategy for imputing missing values. The 
 
 ```r
 data2 <- read.csv(file, header = TRUE, stringsAsFactor = FALSE)
-data2[which(data2$date == "2012-10-01"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-10-08"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-01"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-04"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-09"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-10"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-14"),1] <- steps_int[,2]
-data2[which(data2$date == "2012-11-30"),1] <- steps_int[,2]
+data2[which(data2$date == "2012-10-01"),1] <- steps_int$steps
+data2[which(data2$date == "2012-10-08"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-01"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-04"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-09"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-10"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-14"),1] <- steps_int$steps
+data2[which(data2$date == "2012-11-30"),1] <- steps_int$steps
 data2$date <- ymd(data2$date)
-new_data <- with(data2, aggregate(steps, by=list(date), FUN=sum))
-hist(new_data[,2], main = "Steps Taken Per Day", col = "orchid", xlab = "steps/day")
+new_data <- aggregate(steps~date, data2, sum)
+hist(new_data$steps, main = "Steps Taken Per Day", col = "orchid", xlab = "steps/day")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
@@ -105,7 +105,7 @@ hist(new_data[,2], main = "Steps Taken Per Day", col = "orchid", xlab = "steps/d
 
 
 ```r
-mean(new_data[,2])
+mean(new_data$steps)
 ```
 
 ```
@@ -113,7 +113,7 @@ mean(new_data[,2])
 ```
 
 ```r
-median(new_data[,2])
+median(new_data$steps)
 ```
 
 ```
