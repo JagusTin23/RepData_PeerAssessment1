@@ -17,7 +17,7 @@ steps_day <- aggregate(steps~date, data, sum)
 hist(steps_day$steps, main = "Steps Taken Per Day", col = "turquoise", xlab = "steps/day")
 ```
 
-![](PA1_template2_files/figure-html/mean_median-1.png) 
+![](PA1_template_files/figure-html/mean_median-1.png) 
 
 ```r
 mean(steps_day$steps)  
@@ -47,7 +47,7 @@ maxSteps <-  round(max(steps_int$steps))
 plot(steps_int$interval, steps_int$steps, type = "l", xlab = "5-minute interval", ylab = "steps")
 ```
 
-![](PA1_template2_files/figure-html/dailyplot-1.png) 
+![](PA1_template_files/figure-html/dailyplot-1.png) 
 
 The 5 minute interval with the maximun number of steps is interval **835** with an average of **206** of steps taken.  
 
@@ -90,7 +90,7 @@ new_data <- aggregate(steps~date, data2, sum)
 hist(new_data$steps, main = "Steps Taken Per Day", col = "orchid", xlab = "steps/day")
 ```
 
-![](PA1_template2_files/figure-html/unnamed-chunk-5-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 ## New mean and median calculations.  
 
@@ -124,7 +124,7 @@ library(lattice)
 xyplot(steps~interval|wkday, wkdata, layout=c(1,2), type = "l")
 ```
 
-![](PA1_template2_files/figure-html/unnamed-chunk-7-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
 
 ```r
 dev.off()
